@@ -3,12 +3,12 @@ import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBU3S6c9QD5XA-9lw8Z9zKwVGUoSeOJMs0",
-  authDomain: "barbershop-app-90fe1.firebaseapp.com",
-  projectId: "barbershop-app-90fe1",
-  storageBucket: "barbershop-app-90fe1.firebasestorage.app",
-  messagingSenderId: "252413740284",
-  appId: "1:252413740284:web:fd00ae402f59743d4c4379",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
 const app = initializeApp(firebaseConfig);
