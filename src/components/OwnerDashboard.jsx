@@ -25,10 +25,10 @@ function createServiceId() {
   return `service-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
-export default function OwnerDashboard({ user, profile }) {
-  const [shop, setShop] = useState(null);
-  const [queue, setQueue] = useState([]);
-  const [loading, setLoading] = useState(true);
+export default function OwnerDashboard({ user, profile, demoData = null }) {
+  const [shop, setShop] = useState(demoData?.shop || null);
+  const [queue, setQueue] = useState(demoData?.queue || []);
+  const [loading, setLoading] = useState(demoData?.loading ?? true);
   const [message, setMessage] = useState("");
   const [serviceName, setServiceName] = useState("");
   const [servicePrice, setServicePrice] = useState("");
@@ -38,7 +38,7 @@ export default function OwnerDashboard({ user, profile }) {
   const [copyMessage, setCopyMessage] = useState("");
 
   useEffect(() => {
-    if (!profile?.shopId) {
+    if (demoData || !profile?.shopId) {
       return undefined;
     }
 
@@ -81,7 +81,7 @@ export default function OwnerDashboard({ user, profile }) {
       shopUnsubscribe();
       unsubscribe();
     };
-  }, [profile?.shopId]);
+  }, [demoData, profile?.shopId]);
 
   const services = shop?.services || [];
   const currentServing = shop?.currentServing || null;
@@ -101,6 +101,11 @@ export default function OwnerDashboard({ user, profile }) {
   };
 
   const copyShopId = async () => {
+    if (demoData) {
+      setCopyMessage("Preview mode.");
+      return;
+    }
+
     try {
       await navigator.clipboard.writeText(profile.shopId);
       setCopyMessage("Copied.");
@@ -111,6 +116,11 @@ export default function OwnerDashboard({ user, profile }) {
   };
 
   const completeHaircut = async (queueId) => {
+    if (demoData) {
+      setMessage("Queue actions are disabled in preview mode.");
+      return;
+    }
+
     try {
       setMessage("");
       await deleteDoc(doc(db, "queues", queueId));
@@ -129,6 +139,11 @@ export default function OwnerDashboard({ user, profile }) {
   };
 
   const clearQueue = async () => {
+    if (demoData) {
+      setMessage("Queue actions are disabled in preview mode.");
+      return;
+    }
+
     try {
       setMessage("");
       await Promise.all(queue.map((entry) => deleteDoc(doc(db, "queues", entry.id))));
@@ -144,6 +159,11 @@ export default function OwnerDashboard({ user, profile }) {
 
   const addOrUpdateService = async (event) => {
     event.preventDefault();
+
+    if (demoData) {
+      setMessage("Service editing is disabled in preview mode.");
+      return;
+    }
 
     const trimmedName = serviceName.trim();
     const parsedPrice = Number(servicePrice);
@@ -176,6 +196,11 @@ export default function OwnerDashboard({ user, profile }) {
   };
 
   const startEditingService = (service) => {
+    if (demoData) {
+      setMessage("Service editing is disabled in preview mode.");
+      return;
+    }
+
     setEditingServiceId(service.id);
     setServiceName(service.name);
     setServicePrice(String(service.price));
@@ -183,6 +208,11 @@ export default function OwnerDashboard({ user, profile }) {
   };
 
   const removeService = async (serviceId) => {
+    if (demoData) {
+      setMessage("Service editing is disabled in preview mode.");
+      return;
+    }
+
     try {
       setMessage("");
       await saveServices(
@@ -200,6 +230,11 @@ export default function OwnerDashboard({ user, profile }) {
   };
 
   const startServingCustomer = async (entry) => {
+    if (demoData) {
+      setMessage("Queue actions are disabled in preview mode.");
+      return;
+    }
+
     const parsedMinutes = Number(etaMinutes);
 
     if (Number.isNaN(parsedMinutes) || parsedMinutes <= 0) {
@@ -231,6 +266,11 @@ export default function OwnerDashboard({ user, profile }) {
   };
 
   const clearCurrentServing = async () => {
+    if (demoData) {
+      setMessage("Queue actions are disabled in preview mode.");
+      return;
+    }
+
     try {
       setMessage("");
       await updateDoc(doc(db, "barbershops", profile.shopId), {
@@ -244,6 +284,11 @@ export default function OwnerDashboard({ user, profile }) {
   };
 
   const handleSignOut = async () => {
+    if (demoData) {
+      setMessage("Preview mode keeps this screen open for screenshots.");
+      return;
+    }
+
     await signOut(auth);
   };
 

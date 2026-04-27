@@ -12,15 +12,15 @@ import {
 } from "firebase/firestore";
 import { auth, db } from "../firebase";
 
-export default function CustomerDashboard({ user, profile }) {
-  const [shop, setShop] = useState(null);
-  const [queue, setQueue] = useState([]);
-  const [loading, setLoading] = useState(true);
+export default function CustomerDashboard({ user, profile, demoData = null }) {
+  const [shop, setShop] = useState(demoData?.shop || null);
+  const [queue, setQueue] = useState(demoData?.queue || []);
+  const [loading, setLoading] = useState(demoData?.loading ?? true);
   const [message, setMessage] = useState("");
-  const [selectedServiceId, setSelectedServiceId] = useState("");
+  const [selectedServiceId, setSelectedServiceId] = useState(demoData?.selectedServiceId || "");
 
   useEffect(() => {
-    if (!profile?.shopId) {
+    if (demoData || !profile?.shopId) {
       return undefined;
     }
 
@@ -63,7 +63,7 @@ export default function CustomerDashboard({ user, profile }) {
       shopUnsubscribe();
       unsubscribe();
     };
-  }, [profile?.shopId]);
+  }, [demoData, profile?.shopId]);
 
   const currentEntry = queue.find((entry) => entry.customerId === user.uid);
   const position = currentEntry ? queue.findIndex((entry) => entry.id === currentEntry.id) + 1 : null;
@@ -88,6 +88,11 @@ export default function CustomerDashboard({ user, profile }) {
   }
 
   const joinQueue = async () => {
+    if (demoData) {
+      setMessage("Preview mode keeps this screen static for screenshots.");
+      return;
+    }
+
     if (currentEntry) {
       setMessage("You are already in the queue.");
       return;
@@ -118,6 +123,11 @@ export default function CustomerDashboard({ user, profile }) {
   };
 
   const leaveQueue = async () => {
+    if (demoData) {
+      setMessage("Preview mode keeps this screen static for screenshots.");
+      return;
+    }
+
     if (!currentEntry) {
       return;
     }
@@ -133,6 +143,11 @@ export default function CustomerDashboard({ user, profile }) {
   };
 
   const handleSignOut = async () => {
+    if (demoData) {
+      setMessage("Preview mode keeps this screen open for screenshots.");
+      return;
+    }
+
     await signOut(auth);
   };
 
@@ -218,7 +233,7 @@ export default function CustomerDashboard({ user, profile }) {
                   className="text-input"
                   value={activeServiceId}
                   onChange={(event) => setSelectedServiceId(event.target.value)}
-                  disabled={Boolean(currentEntry)}
+                  disabled={Boolean(currentEntry) || Boolean(demoData)}
                 >
                   {services.map((service) => (
                     <option key={service.id} value={service.id}>

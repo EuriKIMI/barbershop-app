@@ -5,6 +5,7 @@ import { doc, getDoc } from "firebase/firestore";
 import Login from "./components/Login";
 import CustomerDashboard from "./components/CustomerDashboard";
 import OwnerDashboard from "./components/OwnerDashboard";
+import { customerDemoData, ownerDemoData } from "./demoData";
 import { auth, db } from "./firebase";
 import "./App.css";
 
@@ -46,11 +47,18 @@ function ProtectedRoute({ allowedRole, loading, user, profile, children }) {
 }
 
 function App() {
+  const pathname = window.location.pathname;
+  const isDemoRoute = pathname === "/demo-owner" || pathname === "/demo-customer";
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
 
   useEffect(() => {
+    if (isDemoRoute) {
+      setLoading(false);
+      return undefined;
+    }
+
     const unsubscribe = onAuthStateChanged(auth, async (nextUser) => {
       setUser(nextUser);
 
@@ -73,7 +81,7 @@ function App() {
     });
 
     return unsubscribe;
-  }, []);
+  }, [isDemoRoute]);
 
   if (loading) {
     return <FullScreenMessage title="Opening BarberShop" message="Connecting to your account..." />;
@@ -106,6 +114,26 @@ function App() {
             <ProtectedRoute allowedRole="owner" loading={loading} user={user} profile={profile}>
               <OwnerDashboard user={user} profile={profile} />
             </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/demo-owner"
+          element={
+            <OwnerDashboard
+              user={{ uid: "owner-demo-1", displayName: "Andre", email: "andre@example.com" }}
+              profile={{ name: "Andre", role: "owner", shopId: "shop-demo-001" }}
+              demoData={ownerDemoData}
+            />
+          }
+        />
+        <Route
+          path="/demo-customer"
+          element={
+            <CustomerDashboard
+              user={{ uid: "customer-demo-2", displayName: "Ethan", email: "ethan@example.com" }}
+              profile={{ name: "Ethan", role: "customer", shopId: "shop-demo-001" }}
+              demoData={customerDemoData}
+            />
           }
         />
         <Route path="*" element={<Navigate to="/" replace />} />

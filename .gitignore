@@ -13,6 +13,10 @@ dist-ssr
 .env
 .env.*
 !.env.example
+.chrome-*
+.edge-profile
+.capture-*.ps1
+preview.log
 *.local
 
 # Editor directories and files
