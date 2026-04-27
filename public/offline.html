@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#2a1708" />
+    <title>BarberShop Queue</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: "Trebuchet MS", "Segoe UI", Tahoma, sans-serif;
+        background: #f7f0e4;
+        color: #24170d;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+        background:
+          radial-gradient(circle at top left, rgba(197, 104, 34, 0.16), transparent 26%),
+          linear-gradient(135deg, #f7f0e4 0%, #e9d7b7 100%);
+      }
+
+      .card {
+        max-width: 560px;
+        padding: 32px;
+        border-radius: 28px;
+        background: rgba(255, 251, 245, 0.92);
+        box-shadow: 0 24px 80px rgba(80, 52, 22, 0.14);
+        text-align: center;
+      }
+
+      h1 {
+        margin: 0 0 12px;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(2rem, 6vw, 3.4rem);
+      }
+
+      p {
+        margin: 0;
+        color: #6c5947;
+        line-height: 1.6;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <h1>BarberShop Queue</h1>
+      <p>You are offline right now. Reconnect to load live queue updates and sign in again.</p>
+    </main>
+  </body>
+</html>
